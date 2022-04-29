@@ -12,7 +12,7 @@ const PropertyList = () => {
           className='pListImg'
         />
         <div className='pListTitles'>
-          <h1>Hotels</h1>
+          <h3>Hotels</h3>
           <p>856 hotels</p>
         </div>
       </div>
@@ -24,7 +24,7 @@ const PropertyList = () => {
           className='pListImg'
         />
         <div className='pListTitles'>
-          <h1>Apartments</h1>
+          <h3>Apartments</h3>
           <p>534 apartments</p>
         </div>
       </div>
@@ -36,7 +36,7 @@ const PropertyList = () => {
           className='pListImg'
         />
         <div className='pListTitles'>
-          <h1>Resorts</h1>
+          <h3>Resorts</h3>
           <p>688 resorts</p>
         </div>
       </div>
@@ -48,7 +48,7 @@ const PropertyList = () => {
           className='pListImg'
         />
         <div className='pListTitles'>
-          <h1>Villas</h1>
+          <h3>Villas</h3>
           <p>420 villas</p>
         </div>
       </div>
@@ -60,7 +60,7 @@ const PropertyList = () => {
           className='pListImg'
         />
         <div className='pListTitles'>
-          <h1>Cabins</h1>
+          <h3>Cabins</h3>
           <p>221 cabins</p>
         </div>
       </div>

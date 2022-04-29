@@ -19,8 +19,10 @@
   object-fit: cover;
 }
 
-.pListTitles > h1 {
-  font-size: 18px;
+.pListTitles > h3 {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 24px;
 }
 
 .pListTitles > p {
