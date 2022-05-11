@@ -12,31 +12,17 @@ import Header from "../../components/header/Header";
 import MailList from "../../components/mailList/MailList";
 import Footer from "../../components/footer/Footer";
 import "./hotel.css";
+import { useLocation } from "react-router-dom";
+import useFetch from "../../hooks/useFetch";
 
 const Hotel = () => {
+  const location = useLocation();
+  const id = location.pathname.split("/")[2];
+
   const [slideNumber, setSlideNumber] = useState(0);
   const [open, setOpen] = useState(false);
 
-  const photos = [
-    {
-      src: "https://cf.bstatic.com/xdata/images/hotel/max1280x900/261707778.jpg?k=56ba0babbcbbfeb3d3e911728831dcbc390ed2cb16c51d88159f82bf751d04c6&o=&hp=1",
-    },
-    {
-      src: "https://cf.bstatic.com/xdata/images/hotel/max1280x900/261707367.jpg?k=cbacfdeb8404af56a1a94812575d96f6b80f6740fd491d02c6fc3912a16d8757&o=&hp=1",
-    },
-    {
-      src: "https://cf.bstatic.com/xdata/images/hotel/max1280x900/261708745.jpg?k=1aae4678d645c63e0d90cdae8127b15f1e3232d4739bdf387a6578dc3b14bdfd&o=&hp=1",
-    },
-    {
-      src: "https://cf.bstatic.com/xdata/images/hotel/max1280x900/261707776.jpg?k=054bb3e27c9e58d3bb1110349eb5e6e24dacd53fbb0316b9e2519b2bf3c520ae&o=&hp=1",
-    },
-    {
-      src: "https://cf.bstatic.com/xdata/images/hotel/max1280x900/261708693.jpg?k=ea210b4fa329fe302eab55dd9818c0571afba2abd2225ca3a36457f9afa74e94&o=&hp=1",
-    },
-    {
-      src: "https://cf.bstatic.com/xdata/images/hotel/max1280x900/261707389.jpg?k=52156673f9eb6d5d99d3eed9386491a0465ce6f3b995f005ac71abc192dd5827&o=&hp=1",
-    },
-  ];
+  const { data, loading, error } = useFetch(`/hotels/find/${id}`);
 
   const handleOpen = (i) => {
     setSlideNumber(i);
@@ -59,99 +45,98 @@ const Hotel = () => {
     <div>
       <Navbar />
       <Header type='list' />
-      <div className='hotelContainer'>
-        {open && (
-          <div className='slider'>
-            <FontAwesomeIcon
-              icon={faCircleXmark}
-              className='close'
-              onClick={() => setOpen(false)}
-            />
-
-            <div className='sliderWrapper'>
-              <FontAwesomeIcon
-                icon={faCircleArrowLeft}
-                className='arrow'
-                onClick={() => handleMove("l")}
-              />
-
-              <img src={photos[slideNumber].src} className='sliderImg' alt='' />
-
-              <FontAwesomeIcon
-                icon={faCircleArrowRight}
-                className='arrow'
-                onClick={() => handleMove("r")}
-              />
-            </div>
-          </div>
-        )}
-
-        <div className='hotelWrapper'>
-          <button className='bookNow'>Reserve</button>
-
-          <h1 className='hotelTitle'>Grand Hotel</h1>
-
-          <div className='hotelAddress'>
-            <FontAwesomeIcon icon={faLocationDot} />
-            <span>Elton St 125 New York</span>
-          </div>
-
-          <span className='hotelDistance'>
-            Excellent location - 500m from center
-          </span>
-
-          <span className='hotelPriceHighlight'>
-            Book a stay over $114 at this property and get a free airport taxi
-          </span>
-
-          <div className='hotelImages'>
-            {photos.map((pic, i) => (
-              <div className='hotelImgWrapper'>
-                <img
-                  onClick={() => handleOpen(i)}
-                  src={pic.src}
-                  alt=''
-                  className='hotelImg'
+      {loading ? (
+        "Loading..."
+      ) : (
+        <>
+          <div className='hotelContainer'>
+            {open && (
+              <div className='slider'>
+                <FontAwesomeIcon
+                  icon={faCircleXmark}
+                  className='close'
+                  onClick={() => setOpen(false)}
                 />
+
+                <div className='sliderWrapper'>
+                  <FontAwesomeIcon
+                    icon={faCircleArrowLeft}
+                    className='arrow'
+                    onClick={() => handleMove("l")}
+                  />
+
+                  <img
+                    src={data.photos[slideNumber]}
+                    className='sliderImg'
+                    alt=''
+                  />
+
+                  <FontAwesomeIcon
+                    icon={faCircleArrowRight}
+                    className='arrow'
+                    onClick={() => handleMove("r")}
+                  />
+                </div>
               </div>
-            ))}
-          </div>
+            )}
 
-          <div className='hotelDetails'>
-            <div className='hotelDetailsTexts'>
-              <h1 className='hotelTitle'>Stay in the heart of Las Vegas</h1>
-              <p className='hotelDesc'>
-                Hilton Las Vegas at Resorts World offers guests over 40 unique
-                food and beverage outlets, a 5.5 acre pool deck with the first
-                ever infinity pool overlooking Las Vegas Boulevard and is
-                conveniently located across from the Convention Center in the
-                heart of the Las Vegas Strip. Hilton Las Vegas at Resorts World
-                is home to a 5,000 seat theater featuring top headliners, a
-                Nightclub and Day club, and several unique bars. Our dining
-                portfolio includes a 17 Hawker Stall Food Hall concept, Top
-                Chef's, and a variety of cuisines. Our property will feature
-                over 20 retail shops including a cigar lounge, a vegan ice cream
-                shop, and a salon and barbershop.
-              </p>
-            </div>
+            <div className='hotelWrapper'>
+              <button className='bookNow'>Reserve</button>
 
-            <div className='hotelDetailsPrice'>
-              <h3>Property highlights</h3>
-              <span>
-                Located in the heart of Las Vegas, this property has an
-                excellent location score of 9.8!
+              <h1 className='hotelTitle'>{data.name}</h1>
+
+              <div className='hotelAddress'>
+                <FontAwesomeIcon icon={faLocationDot} />
+                <span>{data.address}</span>
+              </div>
+
+              <span className='hotelDistance'>
+                Excellent location - {data.distance}m from center
               </span>
-              <h2>
-                <b>$945</b> <small className='smallText'>(9 nights)</small>
-              </h2>
-              <button>Reserve</button>
-            </div>
-          </div>
-        </div>
 
-        <MailList />
-        <Footer />
-      </div>
+              <span className='hotelPriceHighlight'>
+                Book a stay over ${data.cheapestPrice} at this property and get
+                a free airport taxi
+              </span>
+
+              <div className='hotelImages'>
+                {data.photos?.map((pic, i) => (
+                  <div className='hotelImgWrapper'>
+                    <img
+                      onClick={() => handleOpen(i)}
+                      src={pic}
+                      alt=''
+                      className='hotelImg'
+                    />
+                  </div>
+                ))}
+              </div>
+
+              <div className='hotelDetails'>
+                <div className='hotelDetailsTexts'>
+                  <h1 className='hotelTitle'>{data.title}</h1>
+                  <p className='hotelDesc'>{data.desc}</p>
+                </div>
+
+                <div className='hotelDetailsPrice'>
+                  <h3>Property highlights</h3>
+                  <span>
+                    Located in the heart of Las Vegas, this property has an
+                    excellent location score of 9.8!
+                  </span>
+                  <h2>
+                    <b>$945</b> <small className='smallText'>(9 nights)</small>
+                  </h2>
+                  <button>Reserve</button>
+                </div>
+              </div>
+            </div>
+
+            <MailList />
+            <Footer />
+          </div>
+        </>
+      )}
     </div>
   );
 };

@@ -12,8 +12,8 @@ const GuestHomes = () => {
         "Loading..."
       ) : (
         <>
-          {data.map((item) => (
-            <div className='fpItem'>
+          {data.map((item, i) => (
+            <div className='fpItem' key={i}>
               <img src={item.photos[0]} alt='' className='fpImg' />
               <span className='fpName'>{item.name}</span>
               <span className='fpCity'>{item.city}</span>
