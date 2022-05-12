@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   faBed,
   faCalendarDays,
@@ -16,6 +16,8 @@ import "react-date-range/dist/theme/default.css"; // theme css file
 
 import "./header.css";
 import { useNavigate } from "react-router-dom";
+import { SearchContext } from "../../context/SearchContext";
+import { AuthContext } from "../../context/AuthContext";
 
 const Header = ({ type }) => {
   const [destination, setDestination] = useState("");
@@ -26,8 +28,10 @@ const Header = ({ type }) => {
     room: 1,
   });
 
+  const { user } = useContext(AuthContext);
+
   const [openDate, setOpenDate] = useState(false);
-  const [date, setDate] = useState([
+  const [dates, setDates] = useState([
     {
       startDate: new Date(),
       endDate: new Date(),
@@ -37,9 +41,9 @@ const Header = ({ type }) => {
 
   const navigate = useNavigate();
 
-  const handleSearch = () => {
-    navigate("/hotels", { state: { destination, date, options } });
-  };
+  // const handleSearch = () => {
+  //   navigate("/hotels", { state: { destination, date, options } });
+  // };
 
   const handleOption = (category, operation) => {
     setOptions((prev) => {
@@ -49,6 +53,17 @@ const Header = ({ type }) => {
           operation === "i" ? options[category] + 1 : options[category] - 1,
       };
     });
+  };
+
+  const handleClick = () => {
+    navigate("/login");
+  };
+
+  const { dispatch } = useContext(SearchContext);
+
+  const handleSearch = () => {
+    dispatch({ type: "NEW_SEARCH", payload: { destination, dates, options } });
+    navigate("/hotels", { state: { destination, dates, options } });
   };
 
   return (
@@ -94,7 +109,11 @@ const Header = ({ type }) => {
               Get rewarded for your travels - unlock instant savings of 10% or
               more with a free Booking.com account
             </p>
-            <button className='headerBtn'>Sign In / Register</button>
+            {!user && (
+              <button onClick={handleClick} className='headerBtn'>
+                Sign In / Register
+              </button>
+            )}
 
             <div className='headerSearch'>
               <div className='headerSearchItem'>
@@ -112,17 +131,17 @@ const Header = ({ type }) => {
                 <span
                   onClick={() => setOpenDate(!openDate)}
                   className='headerSearchText'
-                >{`${format(date[0].startDate, "MM/dd/yyy")} to ${format(
-                  date[0].endDate,
+                >{`${format(dates[0].startDate, "MM/dd/yyy")} to ${format(
+                  dates[0].endDate,
                   "MM/dd/yyy"
                 )}`}</span>
 
                 {openDate && (
                   <DateRange
                     editableDateInputs={true}
-                    onChange={(item) => setDate([item.selection])}
+                    onChange={(item) => setDates([item.selection])}
                     moveRangeOnFirstSelection={false}
-                    ranges={date}
+                    ranges={dates}
                     className='date'
                     minDate={new Date()}
                   />

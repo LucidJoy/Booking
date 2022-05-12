@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCircleArrowLeft,
@@ -14,6 +14,7 @@ import Footer from "../../components/footer/Footer";
 import "./hotel.css";
 import { useLocation } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
+import { SearchContext } from "../../context/SearchContext";
 
 const Hotel = () => {
   const location = useLocation();
@@ -23,6 +24,18 @@ const Hotel = () => {
   const [open, setOpen] = useState(false);
 
   const { data, loading, error } = useFetch(`/hotels/find/${id}`);
+
+  const { dates, options } = useContext(SearchContext);
+  console.log(dates);
+
+  const MILLISECONDS_PER_DAY = 1000 * 60 * 60 * 24;
+  function dayDifference(date1, date2) {
+    const timeDiff = Math.abs(date2.getTime() - date1.getTime());
+    const diffDays = Math.ceil(timeDiff / MILLISECONDS_PER_DAY);
+    return diffDays;
+  }
+
+  const days = dayDifference(dates[0].endDate, dates[0].startDate);
 
   const handleOpen = (i) => {
     setSlideNumber(i);
@@ -125,7 +138,8 @@ const Hotel = () => {
                     excellent location score of 9.8!
                   </span>
                   <h2>
-                    <b>$945</b> <small className='smallText'>(9 nights)</small>
+                    <b>${days * data.cheapestPrice * options.room}</b>{" "}
+                    <small className='smallText'>({days} nights)</small>
                   </h2>
                   <button>Reserve</button>
                 </div>
